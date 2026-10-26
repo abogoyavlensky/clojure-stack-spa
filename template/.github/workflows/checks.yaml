@@ -1,0 +1,54 @@
+name: Checks
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+  workflow_call:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: ./.github/actions/cache-clojure-deps
+        with:
+          key-label: 'backend'
+      - uses: jdx/mise-action@v5.2.3
+        with:
+          install_args: "babashka cljfmt clj-kondo java clojure"
+      - name: Lint and format
+        run: bb fmt-check && bb lint-init && bb lint
+      - name: Run tests
+        run: bb test
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: jdx/mise-action@v5.2.3
+        with:
+          install_args: "babashka node"
+      - uses: actions/cache@v6.1.0
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('frontend/package-lock.json') }}
+      - name: Install deps
+        run: bb frontend-install
+      - name: Lint, typecheck and test
+        run: bb check-frontend
+      - name: Build
+        run: bb frontend-build
+
+  outdated:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: ./.github/actions/cache-clojure-deps
+        with:
+          key-label: 'outdated'
+      - uses: jdx/mise-action@v5.2.3
+        with:
+          install_args: "babashka java clojure"
+      - name: Outdated deps
+        run: bb outdated-check

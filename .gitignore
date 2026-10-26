@@ -1,0 +1,8 @@
+tmp-prj/
+.DS_Store
+.idea
+.vscode
+.clj-pulse/
+# Never commit installed frontend deps or build output into the template
+template/frontend/node_modules/
+template/resources/public/

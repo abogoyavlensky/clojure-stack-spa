@@ -1,0 +1,6 @@
+{:description "Full-stack Clojure + React SPA: Reitit API, SQLite, Vite, TanStack Router and Query, Tailwind"
+ :vars []
+ ; Copied verbatim: frontend sources and GitHub Actions use {{ }} syntax of their own
+ :raw ["frontend/src/**"
+       "frontend/package-lock.json"
+       ".github/**"]}

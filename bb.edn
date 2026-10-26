@@ -1,0 +1,19 @@
+{:tasks
+ {:requires ([babashka.fs :as fs])
+  :enter (println "Running task:" (:name (current-task)))
+
+  new {:doc "Generate a project from the local template into tmp-prj/"
+       :task (do
+               (fs/delete-tree "tmp-prj")
+               (shell "frame new --defaults . tmp-prj --dir tmp-prj"))}
+
+  check {:doc "Generate a project and run all of its checks and the frontend build"
+         :depends [new]
+         :task (let [prj (partial shell {:dir "tmp-prj"})]
+                 (when (fs/which "mise")
+                   (prj "mise trust --quiet"))
+                 (prj "bb deps")
+                 (prj "bb lint-init")
+                 (prj "bb check")
+                 (prj "bb outdated-check")
+                 (prj "bb frontend-build"))}}}

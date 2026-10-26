@@ -1,0 +1,2 @@
+#merge [#include "config.edn"
+        {:{{ project-name }}.vite/dev-server {:dir "frontend"}}]

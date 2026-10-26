@@ -1,0 +1,7 @@
+{:parallel? true
+ ; Not sorted: the project's own namespaces would sort differently depending
+ ; on the project name, so a generated project would fail `cljfmt check`.
+ :sort-ns-references? false
+ :remove-multiple-non-indenting-spaces? true
+ :split-keypairs-over-multiple-lines? true
+ :function-arguments-indentation :cursive}
